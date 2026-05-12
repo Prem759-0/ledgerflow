@@ -1,6 +1,5 @@
 # ♾️ SyncBoard | Multiplayer Spatial Canvas
 
-![SyncBoard Header](https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=2564&auto=format&fit=crop)
 
 [![React 18](https://img.shields.io/badge/React-18-blue.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-purple.svg?style=for-the-badge&logo=vite)](https://vitejs.dev/)
