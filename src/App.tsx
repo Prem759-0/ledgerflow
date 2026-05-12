@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   MousePointer2, Hand, StickyNote, Moon, Sun, 
-  Share2, Users, Minus, Plus, Maximize
+  Share2, Users, Minus, Plus
 } from 'lucide-react';
 import { useBoardStore } from './store/useBoardStore';
 import { BoardArea } from './components/Board/BoardArea';
