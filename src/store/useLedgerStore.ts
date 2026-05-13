@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type TransactionType = 'credit' | 'debit';
-export type AccountCategory = 'Operating' | 'Institutional' | 'Partner Capital' | 'Liquidation Reserve' | 'Realization';
+export type AccountCategory = 'Operating' | 'Institutional' | 'Partner Capital' | 'Realization' | 'Secretarial Compliance';
 
 export interface Transaction {
   id: string;
@@ -19,17 +19,16 @@ interface LedgerState {
   addTransaction: (tx: Omit<Transaction, 'id' | 'date'>) => void;
   removeTransaction: (id: string) => void;
   
-  // Derived analytical getters
   getNetPosition: () => number;
   getCapitalAccounts: () => { name: string; value: number }[];
   getChartData: () => { date: string; balance: number; revenue: number }[];
 }
 
 const initialData: Transaction[] = [
-  { id: 'TXN-001', amount: 450000, type: 'credit', category: 'Institutional', entity: 'Apex Capital Partners', description: 'Q3 Institutional Dividend Funding', date: new Date().toISOString() },
-  { id: 'TXN-002', amount: 125000, type: 'debit', category: 'Liquidation Reserve', entity: 'Partner A', description: 'First Realization Distribution', date: new Date(Date.now() - 86400000).toISOString() },
-  { id: 'TXN-003', amount: 75000, type: 'credit', category: 'Partner Capital', entity: 'Partner B', description: 'Capital Call Injection', date: new Date(Date.now() - 172800000).toISOString() },
-  { id: 'TXN-004', amount: 12000, type: 'debit', category: 'Operating', entity: 'AWS Cloud', description: 'Infrastructure Compute', date: new Date(Date.now() - 259200000).toISOString() },
+  { id: 'TXN-8291', amount: 850000, type: 'credit', category: 'Realization', entity: 'Asset Sale', description: 'Liquidation of Primary Assets', date: new Date().toISOString() },
+  { id: 'TXN-8292', amount: 425000, type: 'debit', category: 'Partner Capital', entity: 'Partner A', description: 'Death of a Partner - Capital Settlement', date: new Date(Date.now() - 3600000).toISOString() },
+  { id: 'TXN-8293', amount: 15000, type: 'debit', category: 'Secretarial Compliance', entity: 'State Board', description: 'SP Audit & Registration Fees', date: new Date(Date.now() - 86400000).toISOString() },
+  { id: 'TXN-8294', amount: 200000, type: 'credit', category: 'Institutional', entity: 'Q4 Final Accounts', description: 'P&L Surplus Transfer', date: new Date(Date.now() - 172800000).toISOString() },
 ];
 
 export const useLedgerStore = create<LedgerState>()(
@@ -45,13 +44,11 @@ export const useLedgerStore = create<LedgerState>()(
         transactions: state.transactions.filter(t => t.id !== id)
       })),
 
-      getNetPosition: () => {
-        return get().transactions.reduce((acc, curr) => curr.type === 'credit' ? acc + curr.amount : acc - curr.amount, 0);
-      },
+      getNetPosition: () => get().transactions.reduce((acc, curr) => curr.type === 'credit' ? acc + curr.amount : acc - curr.amount, 0),
 
       getCapitalAccounts: () => {
         const breakdown = get().transactions.reduce((acc, curr) => {
-          if (curr.category === 'Partner Capital' || curr.category === 'Liquidation Reserve') {
+          if (curr.category === 'Partner Capital' || curr.category === 'Realization') {
             acc[curr.category] = (acc[curr.category] || 0) + (curr.type === 'credit' ? curr.amount : -curr.amount);
           }
           return acc;
@@ -60,8 +57,7 @@ export const useLedgerStore = create<LedgerState>()(
       },
 
       getChartData: () => {
-        // Generate a beautifully smoothed 7-day trailing chart based on transactions
-        let runningBalance = 250000; // Base historical
+        let runningBalance = 400000; 
         return Array.from({ length: 7 }).map((_, i) => {
           const d = new Date();
           d.setDate(d.getDate() - (6 - i));
@@ -73,11 +69,11 @@ export const useLedgerStore = create<LedgerState>()(
           return {
             date: d.toLocaleDateString('en-US', { weekday: 'short' }),
             balance: runningBalance,
-            revenue: dailyRev || Math.random() * 50000 + 10000 // Mock data for empty days to keep chart pretty
+            revenue: dailyRev || Math.random() * 50000 + 10000
           };
         });
       }
     }),
-    { name: 'ledgerflow-storage' }
+    { name: 'ledgerflow-storage-v6' }
   )
 );
