@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, ArrowDown, Database, GitMerge, FileText, Plus, UserMinus, UserPlus } from 'lucide-react';
+import { Zap, ArrowDown, FileText, Plus, UserMinus, UserPlus } from 'lucide-react';
 
 export const AutomationBoard: React.FC = () => {
   return (
@@ -82,7 +82,7 @@ export const AutomationBoard: React.FC = () => {
           </div>
         </motion.div>
 
-        <button className="mt-8 w-12 h-12 rounded-full border border-dashed border-zinc-600 hover:border-emerald-500 hover:bg-emerald-500/10 flex items-center justify-center transition-all group">
+        <button className="mt-8 w-12 h-12 rounded-full border border-dashed border-zinc-600 hover:border-emerald-500 hover:bg-emerald-500/10 flex items-center justify-center transition-all group shadow-sm">
           <Plus className="w-5 h-5 text-zinc-500 group-hover:text-emerald-400" />
         </button>
       </div>
