@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Command, CheckCircle2, Circle, AlertCircle } from 'lucide-react';
-import { useOrbitStore, Task } from '../store/useOrbitStore';
+import { useOrbitStore } from '../store/useOrbitStore';
 
 export const CommandPalette: React.FC = () => {
   const { isCommandPaletteOpen, setCommandPaletteOpen, tasks, searchQuery, setSearchQuery } = useOrbitStore();
@@ -49,15 +49,15 @@ export const CommandPalette: React.FC = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          className="relative w-full max-w-2xl bg-[#1C1C1E] border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         >
-          <div className="flex items-center px-4 py-3 border-b border-zinc-800">
+          <div className="flex items-center px-4 py-3 border-b border-zinc-800/80">
             <Search className="w-5 h-5 text-zinc-400 mr-3" />
             <input 
               autoFocus
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Type a command or search tasks..."
+              placeholder="Type a command or search issues..."
               className="flex-1 bg-transparent border-none outline-none text-zinc-100 placeholder:text-zinc-500 text-lg font-medium"
             />
             <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono bg-zinc-800/50 px-2 py-1 rounded-md">
@@ -70,12 +70,12 @@ export const CommandPalette: React.FC = () => {
               <div className="p-8 text-center text-zinc-500 text-sm">No results found for "{searchQuery}"</div>
             ) : (
               <div className="flex flex-col gap-1">
-                <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Tasks</div>
+                <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Issues</div>
                 {filteredTasks.map(task => (
-                  <button key={task.id} className="flex items-center gap-3 w-full px-3 py-3 rounded-xl hover:bg-zinc-800 transition-colors text-left group">
+                  <button key={task.id} className="flex items-center gap-3 w-full px-3 py-3 rounded-xl hover:bg-zinc-800/50 transition-colors text-left group">
                     {getStatusIcon(task.status)}
-                    <span className="text-zinc-500 font-mono text-xs w-12">{task.id}</span>
-                    <span className="text-zinc-200 font-medium flex-1 group-hover:text-white transition-colors">{task.title}</span>
+                    <span className="text-zinc-500 font-mono text-xs w-16">{task.id}</span>
+                    <span className="text-zinc-200 font-medium flex-1 group-hover:text-white transition-colors truncate">{task.title}</span>
                     <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
                       task.priority === 'urgent' ? 'bg-red-500/10 text-red-400' : 'bg-zinc-800 text-zinc-400'
                     }`}>
