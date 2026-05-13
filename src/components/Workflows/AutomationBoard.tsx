@@ -13,7 +13,7 @@ export const AutomationBoard: React.FC = () => {
       </div>
 
       {/* Zapier-Style Workflow Flowchart */}
-      <div className="flex flex-col items-center relative z-10 w-full max-w-xl">
+      <div className="flex flex-col items-center relative z-10 w-full max-w-xl pb-20">
         
         {/* Trigger Node */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full bg-[#111113] border border-emerald-500/30 rounded-2xl p-5 shadow-[0_0_30px_rgba(16,185,129,0.1)] group hover:border-emerald-500/60 transition-colors cursor-pointer">
@@ -63,6 +63,25 @@ export const AutomationBoard: React.FC = () => {
               <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-1 block">Reporting Action</span>
               <h3 className="text-white font-semibold">Generate Final Accounts</h3>
               <p className="text-xs text-zinc-500 mt-1">Compile Trading, P&L, and Balance Sheet for year ended 2026.</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Connector */}
+        <div className="h-8 w-px bg-gradient-to-b from-amber-500/50 to-blue-500/50 my-1 flex items-center justify-center">
+          <ArrowDown className="w-3 h-3 text-zinc-600 bg-[#0a0a0a]" />
+        </div>
+
+        {/* Action Node 3 (The New Database Sync Node) */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="w-full bg-[#111113] border border-white/5 rounded-2xl p-5 hover:bg-[#151517] transition-colors cursor-pointer">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+              <Database className="w-6 h-6 text-blue-400" />
+            </div>
+            <div className="flex-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-1 block">Data Sync</span>
+              <h3 className="text-white font-semibold">Commit to General Ledger</h3>
+              <p className="text-xs text-zinc-500 mt-1">Securely write the final accounts and balances to the master database.</p>
             </div>
           </div>
         </motion.div>
