@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, ArrowDownRight, ArrowUpRight, Trash2, Landmark } from 'lucide-react';
-import { useLedgerStore, Transaction } from '../../store/useLedgerStore';
+import { useLedgerStore } from '../../store/useLedgerStore';
 
 export const TransactionList: React.FC = () => {
   const { transactions, removeTransaction } = useLedgerStore();
@@ -12,7 +12,7 @@ export const TransactionList: React.FC = () => {
   };
 
   const getCategoryIcon = (category: string) => {
-    if (category.includes('Institutional') || category.includes('Capital')) return <Landmark className="w-4 h-4 text-indigo-400" />;
+    if (category.includes('Institutional') || category.includes('Capital') || category.includes('Realization')) return <Landmark className="w-4 h-4 text-indigo-400" />;
     return <Building2 className="w-4 h-4 text-zinc-400" />;
   };
 
@@ -20,7 +20,7 @@ export const TransactionList: React.FC = () => {
     <div className="w-full bg-[#111113] border border-white/5 rounded-3xl p-6 shadow-2xl flex flex-col h-full">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-zinc-100 text-lg font-semibold tracking-tight">Ledger Entries</h3>
-        <button className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors uppercase tracking-widest">View All</button>
+        <button className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-widest">View Final Accounts</button>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar pr-2 flex flex-col gap-3">
@@ -34,12 +34,10 @@ export const TransactionList: React.FC = () => {
               exit={{ opacity: 0, x: -100, transition: { duration: 0.2 } }}
               className="relative group rounded-2xl overflow-hidden"
             >
-              {/* Background Delete Button (Revealed on Swipe) */}
               <div className="absolute inset-0 bg-red-500/20 flex items-center justify-end px-6 rounded-2xl">
                 <Trash2 className="w-5 h-5 text-red-500" />
               </div>
 
-              {/* Draggable Foreground Card */}
               <motion.div
                 drag="x"
                 dragConstraints={{ left: -80, right: 0 }}
