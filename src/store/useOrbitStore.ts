@@ -8,8 +8,10 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  status: Status; 
+  status: Status;
   priority: Priority;
+  labels: string[];
+  assignee: string | null;
   createdAt: number;
 }
 
@@ -26,9 +28,9 @@ interface OrbitState {
 }
 
 const initialTasks: Task[] = [
-  { id: 'TSK-1', title: 'Design System Update', description: 'Update glassmorphism variables.', status: 'in-progress', priority: 'high', createdAt: Date.now() },
-  { id: 'TSK-2', title: 'Vercel Deployment', description: 'Fix strict TypeScript errors.', status: 'done', priority: 'urgent', createdAt: Date.now() - 86400000 },
-  { id: 'TSK-3', title: 'Implement Command Palette', description: 'Add Cmd+K support for global search.', status: 'todo', priority: 'medium', createdAt: Date.now() },
+  { id: 'ORB-142', title: 'Implement Command Palette', description: 'Add Cmd+K support for global search and actions.', status: 'in-progress', priority: 'high', labels: ['Feature', 'Frontend'], assignee: 'Me', createdAt: Date.now() },
+  { id: 'ORB-089', title: 'Fix Vercel Deployment Errors', description: 'Resolve strict TypeScript interface imports.', status: 'done', priority: 'urgent', labels: ['Bug'], assignee: 'Me', createdAt: Date.now() - 86400000 },
+  { id: 'ORB-156', title: 'Design System Update', description: 'Refine glassmorphism variables to match Linear.', status: 'todo', priority: 'medium', labels: ['Design'], assignee: null, createdAt: Date.now() },
 ];
 
 export const useOrbitStore = create<OrbitState>()(
@@ -39,7 +41,7 @@ export const useOrbitStore = create<OrbitState>()(
       searchQuery: '',
 
       addTask: (task) => set((state) => ({
-        tasks: [{ ...task, id: `TSK-${Math.floor(Math.random() * 1000)}`, createdAt: Date.now() }, ...state.tasks]
+        tasks: [{ ...task, id: `ORB-${Math.floor(Math.random() * 900) + 100}`, createdAt: Date.now() }, ...state.tasks]
       })),
 
       updateTaskStatus: (id, newStatus) => set((state) => ({
@@ -53,6 +55,6 @@ export const useOrbitStore = create<OrbitState>()(
       setCommandPaletteOpen: (isOpen) => set({ isCommandPaletteOpen: isOpen }),
       setSearchQuery: (query) => set({ searchQuery: query })
     }),
-    { name: 'orbit-os-storage' } // Persists to LocalStorage automatically!
+    { name: 'orbit-os-storage' }
   )
 );
