@@ -6,10 +6,11 @@ import {
 import { MetricsChart } from './components/Dashboard/MetricsChart';
 import { TransactionList } from './components/Transactions/TransactionList';
 import { AutomationBoard } from './components/Workflows/AutomationBoard';
+import { TrialBalance } from './components/Accounting/TrialBalance';
 
 const App: React.FC = () => {
   const [searchFocused, setSearchFocused] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'automations'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'automations' | 'final-accounts'>('dashboard');
 
   return (
     <div className="flex h-screen w-screen bg-[#0a0a0a] text-zinc-200 overflow-hidden font-sans antialiased selection:bg-emerald-500/30">
@@ -33,7 +34,10 @@ const App: React.FC = () => {
           >
             <LayoutDashboard className="w-4 h-4" /> Overview
           </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all border border-transparent">
+          <button 
+            onClick={() => setActiveTab('final-accounts')}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${activeTab === 'final-accounts' ? 'bg-white/5 border border-white/5 text-emerald-400 shadow-sm' : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent'}`}
+          >
             <ArrowRightLeft className="w-4 h-4" /> Final Accounts
           </button>
           
@@ -82,10 +86,10 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        {activeTab === 'automations' ? (
-          <AutomationBoard />
-        ) : (
-          <div className="flex-1 overflow-y-auto p-8 relative z-10 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-8 relative z-10 no-scrollbar">
+          {activeTab === 'automations' && <AutomationBoard />}
+          {activeTab === 'final-accounts' && <TrialBalance />}
+          {activeTab === 'dashboard' && (
             <div className="max-w-6xl mx-auto flex flex-col gap-8">
               <MetricsChart />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px]">
@@ -106,8 +110,8 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );
