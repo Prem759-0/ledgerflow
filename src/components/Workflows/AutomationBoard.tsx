@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, ArrowDown, Database, GitMerge, FileText, Plus } from 'lucide-react';
+import { Zap, ArrowDown, Database, GitMerge, FileText, Plus, UserMinus, UserPlus } from 'lucide-react';
 
 export const AutomationBoard: React.FC = () => {
   return (
@@ -12,7 +12,6 @@ export const AutomationBoard: React.FC = () => {
         <p className="text-zinc-400 text-sm">Configure event-driven workflows for institutional accounts and compliance.</p>
       </div>
 
-      {/* Zapier-Style Workflow Flowchart */}
       <div className="flex flex-col items-center relative z-10 w-full max-w-xl pb-20">
         
         {/* Trigger Node */}
@@ -23,13 +22,12 @@ export const AutomationBoard: React.FC = () => {
             </div>
             <div className="flex-1">
               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-1 block">Trigger Event</span>
-              <h3 className="text-white font-semibold">Partnership Liquidation Initiated</h3>
-              <p className="text-xs text-zinc-500 mt-1">Listens for funds entering the Realization Account.</p>
+              <h3 className="text-white font-semibold">Death of a Partner</h3>
+              <p className="text-xs text-zinc-500 mt-1">Initiates capital settlement and executor account transfer.</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Connector */}
         <div className="h-8 w-px bg-gradient-to-b from-emerald-500/50 to-indigo-500/50 my-1 flex items-center justify-center">
           <ArrowDown className="w-3 h-3 text-zinc-600 bg-[#0a0a0a]" />
         </div>
@@ -38,17 +36,16 @@ export const AutomationBoard: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="w-full bg-[#111113] border border-white/5 rounded-2xl p-5 hover:bg-[#151517] transition-colors cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
-              <GitMerge className="w-6 h-6 text-indigo-400" />
+              <UserMinus className="w-6 h-6 text-indigo-400" />
             </div>
             <div className="flex-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-1 block">Routing Action</span>
-              <h3 className="text-white font-semibold">Distribute to Partner Capital</h3>
-              <p className="text-xs text-zinc-500 mt-1">Split remaining realization balance 60/40 to Partner A & B.</p>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-1 block">Capital Revaluation</span>
+              <h3 className="text-white font-semibold">Calculate Goodwill & Reserves</h3>
+              <p className="text-xs text-zinc-500 mt-1">Revalue assets and distribute to deceased partner's capital account.</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Connector */}
         <div className="h-8 w-px bg-gradient-to-b from-indigo-500/50 to-amber-500/50 my-1 flex items-center justify-center">
           <ArrowDown className="w-3 h-3 text-zinc-600 bg-[#0a0a0a]" />
         </div>
@@ -57,31 +54,30 @@ export const AutomationBoard: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="w-full bg-[#111113] border border-white/5 rounded-2xl p-5 hover:bg-[#151517] transition-colors cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-              <FileText className="w-6 h-6 text-amber-400" />
+              <UserPlus className="w-6 h-6 text-amber-400" />
             </div>
             <div className="flex-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-1 block">Reporting Action</span>
-              <h3 className="text-white font-semibold">Generate Final Accounts</h3>
-              <p className="text-xs text-zinc-500 mt-1">Compile Trading, P&L, and Balance Sheet for year ended 2026.</p>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500 mb-1 block">Routing Action</span>
+              <h3 className="text-white font-semibold">Transfer to Executor's Loan A/c</h3>
+              <p className="text-xs text-zinc-500 mt-1">Settle final balance to the legal executor with 6% p.a. interest.</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Connector */}
         <div className="h-8 w-px bg-gradient-to-b from-amber-500/50 to-blue-500/50 my-1 flex items-center justify-center">
           <ArrowDown className="w-3 h-3 text-zinc-600 bg-[#0a0a0a]" />
         </div>
 
-        {/* Action Node 3 (The New Database Sync Node) */}
+        {/* Action Node 3 */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="w-full bg-[#111113] border border-white/5 rounded-2xl p-5 hover:bg-[#151517] transition-colors cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-              <Database className="w-6 h-6 text-blue-400" />
+              <FileText className="w-6 h-6 text-blue-400" />
             </div>
             <div className="flex-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-1 block">Data Sync</span>
-              <h3 className="text-white font-semibold">Commit to General Ledger</h3>
-              <p className="text-xs text-zinc-500 mt-1">Securely write the final accounts and balances to the master database.</p>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-1 block">Reporting Action</span>
+              <h3 className="text-white font-semibold">Reconstitute Final Accounts</h3>
+              <p className="text-xs text-zinc-500 mt-1">Adjust New Profit Sharing Ratio (NPSR) for remaining partners.</p>
             </div>
           </div>
         </motion.div>
