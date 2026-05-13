@@ -7,8 +7,9 @@ export const TrialBalance: React.FC = () => {
   const { getTrialBalance } = useLedgerStore();
   const trialBalance = getTrialBalance();
 
-  const totalDebit = trialBalance.reduce((acc, curr) => acc + curr.debit, 0);
-  const totalCredit = trialBalance.reduce((acc, curr) => acc + curr.credit, 0);
+  // Added strict typing here to fix Vercel TS7006 errors
+  const totalDebit = trialBalance.reduce((acc: number, curr: { debit: number }) => acc + curr.debit, 0);
+  const totalCredit = trialBalance.reduce((acc: number, curr: { credit: number }) => acc + curr.credit, 0);
   const isBalanced = totalDebit === totalCredit;
 
   const formatCurrency = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(value);
@@ -33,7 +34,6 @@ export const TrialBalance: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full bg-[#111113] border border-white/5 rounded-3xl shadow-2xl overflow-hidden relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
         
-        {/* Enterprise Table Header */}
         <div className="grid grid-cols-12 gap-4 px-8 py-4 border-b border-white/10 bg-[#151517] text-xs font-bold text-zinc-500 uppercase tracking-widest">
           <div className="col-span-6">Particulars (Heads of Accounts)</div>
           <div className="col-span-2 text-center">L.F.</div>
@@ -41,9 +41,8 @@ export const TrialBalance: React.FC = () => {
           <div className="col-span-2 text-right text-emerald-400/70">Credit ($)</div>
         </div>
 
-        {/* Ledger Rows */}
         <div className="flex flex-col">
-          {trialBalance.map((item, index) => (
+          {trialBalance.map((item: { category: string; debit: number; credit: number }, index: number) => (
             <div key={item.category} className="grid grid-cols-12 gap-4 px-8 py-5 border-b border-white/5 hover:bg-white/[0.02] transition-colors items-center">
               <div className="col-span-6 flex items-center gap-3">
                 <FileSpreadsheet className="w-4 h-4 text-zinc-600" />
@@ -62,7 +61,6 @@ export const TrialBalance: React.FC = () => {
           ))}
         </div>
 
-        {/* Tally Totals */}
         <div className="grid grid-cols-12 gap-4 px-8 py-6 bg-emerald-500/5 border-t-2 border-emerald-500/30">
           <div className="col-span-8 text-right font-bold text-sm text-emerald-500 uppercase tracking-widest">Grand Total</div>
           <div className="col-span-2 text-right font-display font-bold text-lg text-emerald-400 border-double border-b-4 border-emerald-500/50 pb-1">
