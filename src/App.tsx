@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { 
   LayoutDashboard, ArrowRightLeft, Building2, Users, 
-  Settings, Bell, Plus, Search, Command
+  Settings, Bell, Plus, Search, Command, Zap
 } from 'lucide-react';
 import { MetricsChart } from './components/Dashboard/MetricsChart';
 import { TransactionList } from './components/Transactions/TransactionList';
+import { AutomationBoard } from './components/Workflows/AutomationBoard';
 
 const App: React.FC = () => {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'automations'>('dashboard');
 
   return (
     <div className="flex h-screen w-screen bg-[#0a0a0a] text-zinc-200 overflow-hidden font-sans antialiased selection:bg-emerald-500/30">
       
       {/* Sidebar */}
       <aside className="w-64 border-r border-white/5 bg-[#0a0a0a] flex flex-col flex-shrink-0 z-10 shadow-2xl relative">
-        {/* Subtle glow behind logo */}
         <div className="absolute top-0 left-0 w-full h-32 bg-emerald-500/5 blur-3xl pointer-events-none" />
         
         <div className="h-20 flex items-center px-6 gap-3">
@@ -26,37 +27,40 @@ const App: React.FC = () => {
 
         <nav className="flex-1 px-4 py-6 flex flex-col gap-1 overflow-y-auto no-scrollbar relative z-10">
           <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 mb-1">Core Modules</div>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-white bg-white/5 rounded-xl border border-white/5 shadow-sm transition-all group">
-            <LayoutDashboard className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" /> Overview
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all">
-            <ArrowRightLeft className="w-4 h-4" /> Ledger Entries
-          </a>
+          <button 
+            onClick={() => setActiveTab('dashboard')}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-white/5 border border-white/5 text-emerald-400 shadow-sm' : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent'}`}
+          >
+            <LayoutDashboard className="w-4 h-4" /> Overview
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all border border-transparent">
+            <ArrowRightLeft className="w-4 h-4" /> Final Accounts
+          </button>
           
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 mt-6 mb-1">Institutional</div>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all">
-            <Building2 className="w-4 h-4" /> Capital Accounts
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all">
-            <Users className="w-4 h-4" /> Realization Engine
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all">
-            <Settings className="w-4 h-4" /> Settings
-          </a>
+          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 py-2 mt-6 mb-1">Workflows</div>
+          <button 
+            onClick={() => setActiveTab('automations')}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${activeTab === 'automations' ? 'bg-white/5 border border-white/5 text-emerald-400 shadow-sm' : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/5 border border-transparent'}`}
+          >
+            <Zap className="w-4 h-4" /> Automations
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all border border-transparent">
+            <Users className="w-4 h-4" /> Partner Capital
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 rounded-xl transition-all border border-transparent">
+            <Settings className="w-4 h-4" /> SP Compliance
+          </button>
         </nav>
       </aside>
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 bg-[#0a0a0a] relative">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
-
-        {/* Top Header */}
-        <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 shrink-0 z-10 bg-white/[0.02] backdrop-blur-md">
+        <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 shrink-0 z-20 bg-white/[0.02] backdrop-blur-md relative">
           <div className={`flex items-center gap-3 bg-[#111113] border transition-colors rounded-xl px-4 py-2 w-96 shadow-inner ${searchFocused ? 'border-emerald-500/50' : 'border-white/5'}`}>
             <Search className="w-4 h-4 text-zinc-500" />
             <input 
               type="text" 
-              placeholder="Search entities, TXN IDs, or amounts..." 
+              placeholder="Search Final Accounts, TXN IDs..." 
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
               className="flex-1 bg-transparent border-none outline-none text-sm text-zinc-100 placeholder:text-zinc-600"
@@ -78,35 +82,32 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        {/* Dashboard Grid */}
-        <div className="flex-1 overflow-y-auto p-8 relative z-10 no-scrollbar">
-          <div className="max-w-6xl mx-auto flex flex-col gap-8">
-            {/* Top Row: Chart */}
-            <MetricsChart />
-            
-            {/* Bottom Row: Ledger List & Secondary Metrics */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px]">
-              <div className="lg:col-span-2 h-full">
-                <TransactionList />
-              </div>
-              
-              <div className="h-full flex flex-col gap-6">
-                <div className="bg-[#111113] border border-white/5 rounded-3xl p-6 shadow-2xl flex-1 flex flex-col justify-center relative overflow-hidden group">
-                   <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl transition-opacity opacity-50 group-hover:opacity-100" />
-                   <h4 className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-2">Liquidation Reserve</h4>
-                   <p className="font-display font-bold text-3xl text-white">$1,250,000</p>
-                   <p className="text-xs text-emerald-400 font-medium mt-2 flex items-center gap-1">+4.2% from Q2</p>
-                </div>
-                <div className="bg-[#111113] border border-white/5 rounded-3xl p-6 shadow-2xl flex-1 flex flex-col justify-center relative overflow-hidden group">
-                   <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl transition-opacity opacity-50 group-hover:opacity-100" />
-                   <h4 className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-2">OpEx Burn Rate</h4>
-                   <p className="font-display font-bold text-3xl text-white">$45,200 <span className="text-sm text-zinc-500 font-normal">/mo</span></p>
-                   <p className="text-xs text-zinc-500 font-medium mt-2">18 months runway</p>
+        {activeTab === 'automations' ? (
+          <AutomationBoard />
+        ) : (
+          <div className="flex-1 overflow-y-auto p-8 relative z-10 no-scrollbar">
+            <div className="max-w-6xl mx-auto flex flex-col gap-8">
+              <MetricsChart />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[500px]">
+                <div className="lg:col-span-2 h-full"><TransactionList /></div>
+                <div className="h-full flex flex-col gap-6">
+                  <div className="bg-[#111113] border border-white/5 rounded-3xl p-6 shadow-2xl flex-1 flex flex-col justify-center relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl transition-opacity opacity-50 group-hover:opacity-100" />
+                     <h4 className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-2">Realization Surplus</h4>
+                     <p className="font-display font-bold text-3xl text-white">$850,000</p>
+                     <p className="text-xs text-emerald-400 font-medium mt-2 flex items-center gap-1">+12.4% Asset Valuation</p>
+                  </div>
+                  <div className="bg-[#111113] border border-white/5 rounded-3xl p-6 shadow-2xl flex-1 flex flex-col justify-center relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl transition-opacity opacity-50 group-hover:opacity-100" />
+                     <h4 className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-2">Operating Deficit</h4>
+                     <p className="font-display font-bold text-3xl text-white">$45,200 <span className="text-sm text-zinc-500 font-normal">/mo</span></p>
+                     <p className="text-xs text-zinc-500 font-medium mt-2">Before Final Accounts P&L</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
