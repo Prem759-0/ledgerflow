@@ -1,93 +1,96 @@
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Command, CheckCircle2, Circle, AlertCircle } from 'lucide-react';
-import { useOrbitStore, Task } from '../store/useOrbitStore';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useOrbitStore, Task, Status } from '../store/useOrbitStore';
+import { MoreHorizontal, Plus, AlertCircle, CheckCircle2, Circle, Clock } from 'lucide-react';
 
-export const CommandPalette: React.FC = () => {
-  const { isCommandPaletteOpen, setCommandPaletteOpen, tasks, searchQuery, setSearchQuery } = useOrbitStore();
+const COLUMNS: { id: Status; title: string; icon: React.ReactNode }[] = [
+  { id: 'backlog', title: 'Backlog', icon: <Clock className="w-4 h-4 text-zinc-500" /> },
+  { id: 'todo', title: 'To Do', icon: <Circle className="w-4 h-4 text-zinc-400" /> },
+  { id: 'in-progress', title: 'In Progress', icon: <AlertCircle className="w-4 h-4 text-amber-500" /> },
+  { id: 'done', title: 'Done', icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" /> }
+];
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        setCommandPaletteOpen(!isCommandPaletteOpen);
-      }
-      if (e.key === 'Escape') {
-        setCommandPaletteOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isCommandPaletteOpen, setCommandPaletteOpen]);
+export const KanbanBoard: React.FC = () => {
+  const { tasks, updateTaskStatus } = useOrbitStore();
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
-  if (!isCommandPaletteOpen) return null;
+  const handleDragStart = (e: React.DragEvent, taskId: string) => {
+    setDraggedTaskId(taskId);
+    e.dataTransfer.setData('taskId', taskId);
+    e.dataTransfer.effectAllowed = 'move';
+  };
 
-  const filteredTasks = tasks.filter(t => 
-    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    t.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
 
-  const getStatusIcon = (status: string) => {
-    switch(status) {
-      case 'done': return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
-      case 'in-progress': return <AlertCircle className="w-4 h-4 text-amber-500" />;
-      default: return <Circle className="w-4 h-4 text-zinc-500" />;
+  const handleDrop = (e: React.DragEvent, status: Status) => {
+    e.preventDefault();
+    const taskId = e.dataTransfer.getData('taskId');
+    if (taskId) {
+      updateTaskStatus(taskId, status);
     }
+    setDraggedTaskId(null);
   };
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
-        <motion.div 
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          onClick={() => setCommandPaletteOpen(false)}
-          className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm"
-        />
+    <div className="flex-1 overflow-x-auto overflow-y-hidden p-6 flex gap-6 no-scrollbar items-start h-full">
+      {COLUMNS.map(col => {
+        const columnTasks = tasks.filter(t => t.status === col.id);
         
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: -20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="relative w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-        >
-          <div className="flex items-center px-4 py-3 border-b border-zinc-800">
-            <Search className="w-5 h-5 text-zinc-400 mr-3" />
-            <input 
-              autoFocus
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Type a command or search tasks..."
-              className="flex-1 bg-transparent border-none outline-none text-zinc-100 placeholder:text-zinc-500 text-lg font-medium"
-            />
-            <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono bg-zinc-800/50 px-2 py-1 rounded-md">
-              <Command className="w-3 h-3" /> K
+        return (
+          <div 
+            key={col.id}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, col.id)}
+            className="flex-shrink-0 w-80 h-full flex flex-col gap-4 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 p-4"
+          >
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                {col.icon}
+                <h3 className="font-semibold text-zinc-200 text-sm">{col.title}</h3>
+                <span className="text-xs font-mono text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">{columnTasks.length}</span>
+              </div>
+              <button className="text-zinc-500 hover:text-zinc-300 transition-colors"><Plus className="w-4 h-4" /></button>
             </div>
-          </div>
 
-          <div className="max-h-[60vh] overflow-y-auto p-2 no-scrollbar">
-            {filteredTasks.length === 0 ? (
-              <div className="p-8 text-center text-zinc-500 text-sm">No results found for "{searchQuery}"</div>
-            ) : (
-              <div className="flex flex-col gap-1">
-                <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Tasks</div>
-                {filteredTasks.map(task => (
-                  <button key={task.id} className="flex items-center gap-3 w-full px-3 py-3 rounded-xl hover:bg-zinc-800 transition-colors text-left group">
-                    {getStatusIcon(task.status)}
-                    <span className="text-zinc-500 font-mono text-xs w-12">{task.id}</span>
-                    <span className="text-zinc-200 font-medium flex-1 group-hover:text-white transition-colors">{task.title}</span>
-                    <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
-                      task.priority === 'urgent' ? 'bg-red-500/10 text-red-400' : 'bg-zinc-800 text-zinc-400'
+            <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col gap-3 min-h-[150px]">
+              {columnTasks.map(task => (
+                <motion.div
+                  layout
+                  layoutId={task.id}
+                  draggable
+                  onDragStart={(e: any) => handleDragStart(e, task.id)}
+                  onDragEnd={() => setDraggedTaskId(null)}
+                  key={task.id}
+                  className={`bg-zinc-800/80 border border-zinc-700/50 p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-zinc-600 transition-colors shadow-sm ${draggedTaskId === task.id ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-[10px] font-mono text-zinc-400 font-medium">{task.id}</span>
+                    <button className="text-zinc-500 hover:text-zinc-300"><MoreHorizontal className="w-4 h-4" /></button>
+                  </div>
+                  <h4 className="text-sm font-semibold text-zinc-100 mb-1 leading-tight">{task.title}</h4>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">{task.description}</p>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-[10px] font-bold text-white shadow-inner">
+                      ME
+                    </div>
+                    <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-md border ${
+                      task.priority === 'urgent' ? 'bg-red-500/10 border-red-500/20 text-red-400' : 
+                      task.priority === 'high' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' : 
+                      'bg-zinc-700/50 border-zinc-600 text-zinc-300'
                     }`}>
                       {task.priority}
                     </span>
-                  </button>
-                ))}
-              </div>
-            )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+        );
+      })}
+    </div>
   );
 };
